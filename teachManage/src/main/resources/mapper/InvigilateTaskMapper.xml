@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.InvigilateTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.InvigilateTask" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="invigilateTaskId" property="invigilateTaskId" jdbcType="VARCHAR" />
+    <result column="courseNum" property="courseNum" jdbcType="VARCHAR" />
+    <result column="examType" property="examType" jdbcType="VARCHAR" />
+    <result column="jobNumber" property="jobNumber" jdbcType="VARCHAR" />
+    <result column="examDate" property="examDate" jdbcType="TIMESTAMP" />
+    <result column="startTime" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="examAddress" property="examAddress" jdbcType="VARCHAR" />
+    <result column="examClass" property="examClass" jdbcType="VARCHAR" />
+    <result column="invigilateTeacher" property="invigilateTeacher" jdbcType="VARCHAR" />
+    <result column="mainInvigilateTeacher" property="mainInvigilateTeacher" jdbcType="VARCHAR" />
+    <result column="addUser" property="addUser" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="modifyUser" property="modifyUser" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, invigilateTaskId, courseNum, examType, jobNumber, examDate, startTime, endTime, examAddress, examClass,
+    invigilateTeacher, mainInvigilateTeacher, addUser, addTime, modifyUser, modifyTime,status,
+    delFlag
+  </sql>
+  <!--分页查询所有监考任务-->
+  <select id="selectAllInvigilateTask" resultMap="BaseResultMap">
+    SELECT
+      i.id,
+      i.invigilateTaskId,
+      i.courseNum,
+      i.examType,
+      (
+        SELECT
+          userName
+        FROM
+          user_info u
+        WHERE
+          u.jobNumber = i.jobNumber
+      ) AS jobNumber,
+      i.examDate,
+      i.startTime,
+      i.endTime,
+      i.examAddress,
+      i.examClass,
+      i.invigilateTeacher,
+      i.mainInvigilateTeacher,
+      i.addUser,
+      i.addTime,
+      i.modifyUser,
+      i.modifyTime,
+      i.status
+    FROM
+      invigilate_task i
+    WHERE
+      1 = 1
+    AND i.delFlag = "0"
+    <if test="invigilateTask.courseNum != null and invigilateTask.courseNum != ''">
+      and i.courseNum  like CONCAT('%', #{invigilateTask.courseNum}, '%')
+    </if>
+    <if test="invigilateTask.jobNumber != null and invigilateTask.jobNumber != ''">
+      and i.jobNumber like CONCAT('%', #{invigilateTask.jobNumber}, '%')
+    </if>
+    limit #{beginIndex},#{rows}
+  </select>
+
+  <!-- 查看监考任务 -->
+  <select id="checkInvigilateTask" resultMap="BaseResultMap" parameterType="java.lang.String">
+   SELECT
+      i.id,
+      i.invigilateTaskId,
+      (
+        SELECT
+          courseName
+        FROM
+          course_info c
+        WHERE
+          c.courseNum = i.courseNum
+      ) AS courseNum,
+      i.examType,
+      (
+    SELECT
+      userName
+    FROM
+      user_info u
+    WHERE
+      u.jobNumber = i.jobNumber
+      ) AS jobNumber,
+      i.examDate,
+      i.startTime,
+      i,
+      endTime,
+      i.examAddress,
+      i.examClass,
+      i.invigilateTeacher,
+      i.mainInvigilateTeacher,
+      i.addUser,
+      i.addTime,
+      i.modifyUser,
+      i.modifyTime,
+      i.status,
+    FROM
+      invigilate_task i
+  where 1=1 and i.delFlag = "0"
+  and i.id=#{id}
+  </select>
+
+<!--根据教师查询监考任务-->
+  <select id="selectInvigilateTaskByJobNumber" resultMap="BaseResultMap">
+    SELECT
+      i.id,
+      i.invigilateTaskId,
+      (
+        SELECT
+          courseName
+        FROM
+          course_info c
+        WHERE
+          c.courseNum = i.courseNum
+      ) AS courseNum,
+      i.examType,
+      (
+    SELECT
+      userName
+    FROM
+      user_info u
+    WHERE
+      u.jobNumber = i.jobNumber
+      ) AS jobNumber,
+      i.examDate,
+      i.startTime,
+      i,
+      endTime,
+      i.examAddress,
+      i.examClass,
+      i.invigilateTeacher,
+      i.mainInvigilateTeacher,
+      i.addUser,
+      i.addTime,
+      i.modifyUser,
+      i.modifyTime,
+      i.status
+    FROM
+      invigilate_task i
+    WHERE
+      i.jobNumber = #{jobNumber} and
+      i.delFlag = "0"
+    <if test="invigilateTask.courseNum != null and invigilateTask.courseNum != ''">
+      and i.courseNum  like CONCAT('%', #{invigilateTask.courseNum}, '%')
+    </if>
+    <if test="invigilateTask.jobNumber != null and invigilateTask.jobNumber != ''">
+      and i.jobNumber like CONCAT('%', #{invigilateTask.jobNumber}, '%')
+    </if>
+    limit #{beginIndex},#{rows}
+  </select>
+  <!--查询监考任务总数-->
+  <select id="selectInvigilateTaskCount" resultType="Integer">
+    SELECT
+      count(invigilateTaskId)
+    FROM
+      invigilate_task
+    WHERE
+      1 = 1
+    AND delFlag = "0"
+    <if test="invigilateTask.courseNum != null and invigilateTask.courseNum != ''">
+      and courseNum  like CONCAT('%', #{invigilateTask.courseNum}, '%')
+    </if>
+
+    <if test="invigilateTask.jobNumber != null and invigilateTask.jobNumber != ''">
+      and jobNumber like CONCAT('%', #{invigilateTask.jobNumber}, '%')
+    </if>
+
+  </select>
+<!--删除监考任务-->
+  <update id="deleteInvigilateTask" parameterType="java.util.List" >
+    UPDATE invigilate_task
+    SET delFlag = '1'
+    WHERE
+      Id IN (
+    <foreach collection="list" item="item" index="index" separator="," >
+      #{item}
+    </foreach>
+    )
+  </update>
+
+  <!-- 修改监考任务 -->
+  <update id="updateInvigilateTask" parameterType="com.teachManage.model.InvigilateTask">
+    update invigilate_task
+    <set>
+      <if test="invigilateTask.invigilateTaskId !=null">
+        invigilateTaskId=#{invigilateTask.invigilateTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.courseNum !=null">
+        courseNum= #{invigilateTask.courseNum,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.examType !=null">
+        examType=#{invigilateTask.examType,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.examDate !=null">
+        examDate=#{invigilateTask.examDate,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.startTime !=null">
+        startTime=#{invigilateTask.startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.endTime !=null">
+        endTime=#{invigilateTask.endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.examAddress !=null">
+        examAddress=#{invigilateTask.examAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.totalClassHours !=null">
+        totalClassHours=  #{invigilateTask.totalClassHours,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.lectureHours !=null">
+        lectureHours= #{invigilateTask.lectureHours,jdbcType=VARCHAR},
+      </if>
+
+      <if test="invigilateTask.experimentalHours !=null">
+        experimentalHours=#{invigilateTask.experimentalHours,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.startWeak !=null">
+        startWeak=#{invigilateTask.startWeak,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.endWeak !=null">
+        endWeak=#{invigilateTask.endWeak,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.campusArea !=null">
+        campusArea=#{invigilateTask.campusArea,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.teachClass !=null">
+        teachClass=#{invigilateTask.teachClass,jdbcType=VARCHAR},
+
+      </if>
+      <if test="invigilateTask.jobNumber !=null">
+        jobNumber= #{invigilateTask.jobNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.teacherAge !=null">
+        teacherAge=#{invigilateTask.teacherAge,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.positionalTitle !=null">
+        positionalTitle= #{invigilateTask.positionalTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.remark !=null">
+        remark= #{invigilateTask.remark,jdbcType=VARCHAR},
+      </if>
+
+      <if test="invigilateTask.grade !=null">
+        grade =#{invigilateTask.grade,jdbcType=VARCHAR},
+      </if>
+      <if test="invigilateTask.modifyUser !=null">
+        modifyUser= #{invigilateTask.modifyUser,jdbcType=VARCHAR},
+      </if>
+      modifyTime=NOW()
+    </set>
+    where
+    id=#{invigilateTask.id,jdbcType=INTEGER}
+  </update>
+</mapper>

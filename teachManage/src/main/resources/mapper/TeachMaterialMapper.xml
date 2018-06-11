@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.TeachMaterialMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.TeachMaterial" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="materialId" property="materialId" jdbcType="VARCHAR" />
+    <result column="courseNum" property="courseNum" jdbcType="VARCHAR" />
+    <result column="press" property="press" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="orderNum" property="orderNum" jdbcType="VARCHAR" />
+    <result column="publishTime" property="publishTime" jdbcType="VARCHAR" />
+    <result column="useGrade" property="useGrade" jdbcType="VARCHAR" />
+    <result column="useClasses" property="useClasses" jdbcType="VARCHAR" />
+    <result column="isOptional" property="isOptional" jdbcType="VARCHAR" />
+    <result column="campus" property="campus" jdbcType="VARCHAR" />
+    <result column="jobNum" property="jobNum" jdbcType="VARCHAR" />
+    <result column="isProBook" property="isProBook" jdbcType="VARCHAR" />
+    <result column="isEduBook" property="isEduBook" jdbcType="VARCHAR" />
+    <result column="isCouBook" property="isCouBook" jdbcType="VARCHAR" />
+    <result column="isEditBook" property="isEditBook" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="addUser" property="addUser" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="modifyUser" property="modifyUser" jdbcType="VARCHAR" />
+    <result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+    <result column="materialName" property="materialName" jdbcType="VARCHAR" />
+    <result column="userPhone" property="userPhone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, materialId,courseNum, press, author, orderNum, publishTime, useGrade, useClasses, 
+    isOptional, campus, jobNum, isProBook, isEduBook, isCouBook, isEditBook, remark, 
+    addTime, addUser, modifyTime, modifyUser, delFlag, materialName,userPhone
+  </sql>
+  
+ 
+  <select id="selectMaterialCount" resultType="Integer">
+  		select COUNT(t.materialId) 
+  		from teach_material t
+  		where 1=1 and t.delFlag = "0"
+	  	<if test="teachMaterial.courseNum != null and teachMaterial.courseNum != ''">
+	    	and t.courseNum  like CONCAT('%', #{teachMaterial.courseNum}, '%')
+	    </if> 
+	    <if test="teachMaterial.materialName != null and teachMaterial.materialName != ''">
+	    	and t.materialName like CONCAT('%', #{teachMaterial.materialName}, '%')
+	    </if>   
+	    <if test="teachMaterial.author != null and teachMaterial.author != ''">
+	    	and t.author like CONCAT('%', #{teachMaterial.author}, '%')
+	    </if>
+	    <if test="teachMaterial.press != null and teachMaterial.press != ''">
+	     	and t.press = #{teachMaterial.press}
+	    </if>
+	    <if test="teachMaterial.orderNum != null and teachMaterial.orderNum != ''">
+	    	and t.orderNum =#{teachMaterial.orderNum}
+	    </if>
+	    <if test="teachMaterial.isOptional != null and teachMaterial.isOptional != ''">
+	     	and t.isOptional = #{teachMaterial.isOptional}
+	    </if>
+  </select>
+  <select id="selectMaterialPaging" resultMap="BaseResultMap">
+  	select t.materialId as id,t.materialId,(select c.courseName from course_info c where c.courseNum = t.courseNum ) as courseNum, t.press, t.author, t.orderNum, t.publishTime, t.useGrade, t.useClasses, 
+    t.isOptional, t.campus, t.jobNum, t.isProBook, t.isEduBook, t.isCouBook, t.isEditBook, t.remark, 
+    t.addTime, (SELECT u.userName from user_info u where u.jobNumber = t.addUser ) as addUser, t.modifyTime, t.modifyUser, t.delFlag, t.materialName,t.userPhone
+    from teach_material t
+    where 1=1 and 
+    t.delFlag = "0"
+    <if test="teachMaterial.courseNum != null and teachMaterial.courseNum != ''">
+    	and t.courseNum  like CONCAT('%', #{teachMaterial.courseNum}, '%')
+    </if>   
+     <if test="teachMaterial.materialName != null and teachMaterial.materialName != ''">
+	    	and t.materialName like CONCAT('%', #{teachMaterial.materialName}, '%')
+	    </if>   
+    <if test="teachMaterial.author != null and teachMaterial.author != ''">
+    	and t.author like CONCAT('%', #{teachMaterial.author}, '%')
+    </if>
+    <if test="teachMaterial.press != null and teachMaterial.press != ''">
+     	and t.press = #{teachMaterial.press}
+    </if>
+    <if test="teachMaterial.orderNum != null and teachMaterial.orderNum != ''">
+    	and t.orderNum =#{teachMaterial.orderNum}
+    </if>
+    <if test="teachMaterial.isOptional != null and teachMaterial.isOptional != ''">
+     	and t.isOptional = #{teachMaterial.isOptional}
+    </if>
+  </select>
+  <insert id="addTeachMaterial" parameterType="com.teachManage.model.TeachMaterial" >
+  	insert into teach_material (materialId,courseNum,
+      press, author, orderNum, 
+      publishTime, useGrade, useClasses, 
+      isOptional, campus, jobNum,userPhone, 
+      isProBook, isEduBook, isCouBook, 
+      isEditBook, remark, addTime, 
+      addUser,
+      delFlag, materialName)
+    values ( #{materialId,jdbcType=VARCHAR},#{courseNum,jdbcType=VARCHAR}, 
+      #{press,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{orderNum,jdbcType=VARCHAR}, 
+      #{publishTime,jdbcType=VARCHAR}, #{useGrade,jdbcType=VARCHAR}, #{useClasses,jdbcType=VARCHAR}, 
+      #{isOptional,jdbcType=VARCHAR}, #{campus,jdbcType=VARCHAR}, #{jobNum,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR},
+      #{isProBook,jdbcType=VARCHAR}, #{isEduBook,jdbcType=VARCHAR}, #{isCouBook,jdbcType=VARCHAR}, 
+      #{isEditBook,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},NOW(), 
+      #{addUser,jdbcType=VARCHAR}, 
+      #{delFlag,jdbcType=VARCHAR}, #{materialName,jdbcType=VARCHAR})
+  </insert>
+  <update id="deleteMaterial" parameterType="java.util.List">
+  		update teach_material set delFlag = '1' where materialId in (
+  			<foreach collection="list" index="index" item="item" separator=",">
+  				#{item}
+  			</foreach>
+  		)
+  </update>
+  <select id="getMaterialById" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select t.materialId as id,t.materialId,(select c.courseName from course_info c where c.courseNum = t.courseNum ) as courseNum, t.press, t.author, t.orderNum, t.publishTime, t.useGrade, t.useClasses, 
+    case t.isOptional WHEN '0' then '否' when '1' THEN '是' end as isOptional
+, t.campus, (SELECT u.userName from user_info u where u.jobNumber = t.jobNum ) as jobNum, 
+case t.isProBook WHEN '0' then '否' when '1' THEN '是' end as isProBook ,
+case t.isEduBook WHEN '0' then '否' when '1' THEN '是' end as isEduBook ,
+case t.isCouBook WHEN '0' then '否' when '1' THEN '是' end as isCouBook ,
+case t.isEditBook WHEN '0' then '否' when '1' THEN '是' end as isEditBook ,
+ t.remark, t.addTime, (SELECT u.userName from user_info u where u.jobNumber = t.addUser ) as addUser, t.modifyTime, 
+(SELECT u.userName from user_info u where u.jobNumber = t.modifyUser ) as modifyUser, t.delFlag, t.materialName,t.userPhone
+    from teach_material t
+    where 1=1 and 
+    t.delFlag = "0"
+    and t.materialId = #{materialId}
+  </select>
+  <select id="materialDetail" parameterType="java.lang.String" resultMap="BaseResultMap">
+  select id, materialId,courseNum, press, author, orderNum, publishTime, useGrade, useClasses, 
+    isOptional, campus, jobNum, isProBook, isEduBook, isCouBook, isEditBook, remark, 
+    addTime, addUser, modifyTime, modifyUser, delFlag, materialName,userPhone from teach_material 
+    where 1=1 and 
+    delFlag = "0"
+    and materialId = #{materialId}
+  </select>
+  <update id="editTeachMaterial" parameterType="com.teachManage.model.TeachMaterial">
+  	update teach_material set 
+  	materialName = #{materialName},
+  	author = #{author},
+  	press = #{press},
+  	orderNum = #{orderNum},
+  	publishTime = #{publishTime},
+  	useClasses = #{useClasses},
+  	isOptional = #{isOptional},
+  	campus = #{campus},
+  	jobNum = #{jobNum},
+  	userPhone = #{userPhone},
+  	isProBook = #{isProBook},
+  	isEduBook = #{isEduBook},
+  	isCouBook = #{isCouBook},
+  	isEditBook = #{isEditBook},
+  	modifyUser = #{modifyUser},
+  	modifyTime = NOW(),
+  	remark = #{remark} 
+  	where 1=1 and materialId = #{materialId}
+  	
+  </update>
+  <select id="exportBatchMessage" parameterType="java.util.List" resultType="java.util.Map">
+  		select  t.id, t.materialId,t.courseNum, t.press, t.author, t.orderNum, t.publishTime,
+  		 t.useGrade, t.useClasses, 
+    case t.isOptional when "0" then "必修" when "1" then "选修" end as isOptional, t.campus, 
+	(select u.userName from user_info u where u.jobNumber = t.jobNum) as jobNum, 
+	case t.isProBook when "0" then "否" when "1" then "是" end as isProBook,
+	case t.isEduBook when "0" then "否" when "1" then "是" end as isEduBook,
+	case t.isCouBook when "0" then "否" when "1" then "是" end as isCouBook,
+	case t.isEditBook when "0" then "否" when "1" then "是" end as isEditBook,
+	t.remark, 
+    t.addTime, t.addUser, t.modifyTime, t.modifyUser, t.delFlag, t.materialName,t.userPhone
+    from teach_material t
+    where 1=1 and delFlag = "0" 
+    and t.materialId in(
+    <foreach collection="materialList" item="item" index="index" separator=",">
+    	#{item}
+    </foreach>
+    )
+  </select>
+  <select id="exportMessage" resultType="java.util.Map">
+  	select  t.id, t.materialId,t.courseNum, t.press, t.author, t.orderNum, t.publishTime,
+  		 t.useGrade, t.useClasses, 
+    case t.isOptional when "0" then "必修" when "1" then "选修" end as isOptional, t.campus, 
+	(select u.userName from user_info u where u.jobNumber = t.jobNum) as jobNum, 
+	case t.isProBook when "0" then "否" when "1" then "是" end as isProBook,
+	case t.isEduBook when "0" then "否" when "1" then "是" end as isEduBook,
+	case t.isCouBook when "0" then "否" when "1" then "是" end as isCouBook,
+	case t.isEditBook when "0" then "否" when "1" then "是" end as isEditBook,
+	t.remark, 
+    t.addTime, t.addUser, t.modifyTime, t.modifyUser, t.delFlag, t.materialName,t.userPhone
+    from teach_material t
+    where 1=1 and delFlag = "0"
+    <if test="teachMaterial.courseNum != null and teachMaterial.courseNum != ''">
+    	and t.courseNum  like CONCAT('%', #{teachMaterial.courseNum}, '%')
+    </if>   
+     <if test="teachMaterial.materialName != null and teachMaterial.materialName != ''">
+	    	and t.materialName like CONCAT('%', #{teachMaterial.materialName}, '%')
+	    </if>   
+    <if test="teachMaterial.author != null and teachMaterial.author != ''">
+    	and t.author like CONCAT('%', #{teachMaterial.author}, '%')
+    </if>
+    <if test="teachMaterial.press != null and teachMaterial.press != ''">
+     	and t.press = #{teachMaterial.press}
+    </if>
+    <if test="teachMaterial.orderNum != null and teachMaterial.orderNum != ''">
+    	and t.orderNum =#{teachMaterial.orderNum}
+    </if>
+    <if test="teachMaterial.isOptional != null and teachMaterial.isOptional != ''">
+     	and t.isOptional = #{teachMaterial.isOptional}
+    </if>
+  </select>
+</mapper>

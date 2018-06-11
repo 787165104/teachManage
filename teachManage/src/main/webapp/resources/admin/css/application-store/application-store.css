@@ -1,0 +1,163 @@
+.app_product {
+    width: 19%;
+    min-width: auto !important;
+    max-width: none !important;
+    float: none !important;
+    display: inline-block;
+    cursor : pointer;
+}
+
+.app_product > div.pricing-box-small{
+    border-color: #DCE8F1;
+    margin-left: -1px;
+}
+
+.app_product div.widget-main {
+    padding: 5px;
+}
+
+div.widget-main > img {
+    height: 150px;
+    width: 100%;
+    opacity: 0.8
+}
+
+ul.pricing-table>li:nth-child(1) {
+    padding-left: 10px;
+    font-weight: bold;
+    text-align: left;
+}
+
+ul.pricing-table>li:nth-child(2) {
+    padding-bottom: 0px;
+}
+
+ul.pricing-table>li:nth-child(2) > div.rating {
+    cursor: pointer;
+    float: left;
+    padding-left: 10px;
+}
+
+ul.pricing-table>li:nth-child(2) > div.rating > i{
+    font-size: 12px;
+}
+
+.modal-app_prod {
+    height: 100%;
+}
+
+.modal-app_prod .modal-content{
+    height: 90%;
+}
+
+.modal-app_prod > div.modal-content > div.modal-body{
+    height: 100%;
+}
+
+.modal-app_prod div.bootbox-body {
+    background-color: #f1f1f1;
+}
+
+.app_pro_detail_head {
+    position: relative;
+    position: relative;
+    height: 80px;
+    margin-top: 10px;
+}
+
+.pro_icon {
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    font-size: 60px;
+    width: 65px;
+    height: 90px;
+}
+
+.app_pro_basic {
+    position: absolute;
+    left: 90px;
+    top: 0px;
+}
+
+.app_pro_basic  i.star-on-png {
+    font-size: 12px;
+}
+
+.app_pro_basic .vr {
+    height: 15px;
+    width: 1px;
+    display: inline;
+    border-left: 1px dotted #a6a6a6;
+    margin: 0 10px;
+    vertical-align: middle;
+}
+
+.btnAddAppToCompany {
+    position: absolute;
+    left: auto;
+    right: 20px;
+    top: 10px;
+}
+
+.app_pro_detail_body {
+    margin-top: 5px;
+    height: 500px;
+}
+
+.app_pro_detail_body .tab-content {
+    height: 465px;
+    background: #fff;
+}
+
+.app_pro_image {
+    width: 630px;
+    height: 410px;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+
+.app_pro_image img {
+    height: 100%;
+}
+
+.app_pro_info {
+    position: absolute;
+    width: 200px;
+    left: auto;
+    right: 0px;
+    padding-top: 20px;
+}
+
+.app_pro_desc {
+    height: 320px;
+    padding: 10px;
+    padding-top: 0px;
+}
+
+.app_pro_desc > pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    height: 320px;
+    border-radius: 0px;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+.app_pro_info hr {
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.slide_image_loading {
+    position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,.3); left: 0px; top: 0px; text-align: center;
+}
+
+.slide_image_loading i{
+    font-size: 45px;
+    color: #fff;
+    margin: 0 auto;
+    margin-top: 25%;
+}

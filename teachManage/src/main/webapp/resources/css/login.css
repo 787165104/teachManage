@@ -1,0 +1,56 @@
+html, body{
+	height: 100%;
+}
+
+.m_container {
+	height: 100%;
+	
+	background-image: url(../images/login_bg.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.m_row {
+	height: 100%;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form_container{
+	width: 372px;
+	/*height: 250px;*/
+	margin-top: -50px;
+}
+
+.form_title{
+	font: bold 30px "微软雅黑";
+    height: 50px;
+    text-align: center;
+    color: #666;
+    text-shadow: 0 1px 0 #ffffff;
+}
+
+.form_items{
+	width: 332px;
+	border: 0px solid;
+    margin: 0 auto;
+    margin-top: 0px;
+    padding: 20px 30px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px 0px rgb(95, 95, 95);
+}
+
+.form_items input {
+	box-shadow: 1px 1px 3px 1px #ccc;	
+	background: rgba(255,255,255,0.6);
+}
+
+.form_submit button{
+	width: 100%;
+}
+
+.form div{
+	margin-top: 15px;
+}

@@ -1,0 +1,52 @@
+body{
+	font-size: 12px;
+}
+body.session_time_out {
+	background-color: #2f4050;
+	background-image: url(../img/session_out.png);
+	background-position: center top;
+	background-repeat: no-repeat;
+}
+body.no_power{
+	background-color: #2f4050;
+	background-image: url(../img/no_power.png);
+	background-position: center top;
+	background-repeat: no-repeat;
+}
+#error {
+    color: #FFF;
+}
+#error {
+    width: 960px;
+    text-align: center;
+    margin-top: 400px;
+}
+body, p, div, ul, ol, li, dl, dd, dt, h1, h2, h3, h4, h5, h6, form, input, select, label, table, tr, td, th, thead, tbody, tfoot {
+    margin: 0px auto;
+    padding: 0px;
+    border: 0;
+}
+
+
+#error span, #error a {
+    color: Yellow;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+.table > tbody > tr > th{
+	background-color:#D4DEE6;
+	font-size:8px;
+	width:8%;
+}
+
+.table > tbody > tr > td {
+  border-top: 1px solid #e7eaec;
+  line-height: 1.42857;
+  padding: 8px;
+  vertical-align: top;
+}
+

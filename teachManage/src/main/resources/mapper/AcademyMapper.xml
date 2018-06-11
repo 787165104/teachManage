@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.AcademyMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.Academy" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="academyId" property="academyId" jdbcType="VARCHAR" />
+    <result column="academy" property="academy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, academy
+  </sql>
+  <select id="selectAcademyList" resultMap="BaseResultMap">
+    select 
+    id,academyId,academy
+    from academy    
+  </select>
+
+</mapper>

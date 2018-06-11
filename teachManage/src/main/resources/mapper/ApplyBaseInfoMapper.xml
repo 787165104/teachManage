@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.ApplyBaseInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.ApplyBaseInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="applyId" property="applyId" jdbcType="VARCHAR" />
+    <result column="applyType" property="applyType" jdbcType="VARCHAR" />
+    <result column="createBy" property="createBy" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="auditBy" property="auditBy" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="advise" property="advise" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="addUser" property="addUser" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="modifyUser" property="modifyUser" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, applyId,applyType, createBy, createTime, auditBy, remark, advise, status, addUser, addTime,
+    modifyUser, modifyTime, delFlag
+  </sql>
+  <!-- 查询记录总数 -->
+  <select id="selectApplyPagingCount" resultType="Integer">
+    select COUNT(c.applyId)
+    from apply_base_info c
+    where 1=1 and delFlag = "0"
+    <if test="ApplyBaseInfo.status != null and ApplyBaseInfo.status != ''">
+      and c.status  like CONCAT('%', #{ApplyBaseInfo.status}, '%')
+    </if>
+    <if test="ApplyBaseInfo.applyType != null and ApplyBaseInfo.applyType != ''">
+      and c.applyType like CONCAT('%', #{ApplyBaseInfo.applyType}, '%')
+    </if>
+    <if test="ApplyBaseInfo.createBy != null and ApplyBaseInfo.createBy != ''">
+      and c.createBy like CONCAT('%', #{ApplyBaseInfo.createBy}, '%')
+    </if>
+    ORDER BY addTime DESC
+  </select>
+  <!-- 分页查询申请信息记录 -->
+  <select id="selectApplyPaging" resultMap="BaseResultMap">
+    SELECT
+    c.applyId AS id,
+    c.addTime,
+    c.applyType,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.createBy
+    ) AS createBy,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.auditBy
+    ) AS auditBy,
+    c.remark,
+    c.advise,
+    CASE c.status
+    WHEN "0" THEN
+    "提交"
+    WHEN "1" THEN
+    "暂存"
+    WHEN "2" THEN
+    "驳回"
+    WHEN "3" THEN
+    "通过"
+    END AS status,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.addUser
+    ) AS addUser,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.modifyUser
+    ) AS modifyUser,
+    c.modifyTime,
+    c.delFlag
+    FROM
+    apply_base_info c
+    WHERE
+    1 = 1
+    AND c.delFlag = "0"
+    <if test="ApplyBaseInfo.applyType != null and ApplyBaseInfo.applyType != ''">
+      and c.applyType like CONCAT('%', #{ApplyBaseInfo.applyType}, '%')
+    </if>
+    <if test="ApplyBaseInfo.createBy != null and ApplyBaseInfo.createBy != ''">
+      and c.createBy like CONCAT('%', #{ApplyBaseInfo.createBy}, '%')
+    </if>
+    <if test="ApplyBaseInfo.status != null and ApplyBaseInfo.status != ''">
+      and c.status = #{ApplyBaseInfo.status}
+    </if>
+    ORDER BY
+    c.addTime DESC
+    LIMIT #{beginIndex},#{rows}
+  </select>
+  <!--根据主键查看申请-->
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from apply_base_info
+    where id = #{id,jdbcType=INTEGER}
+    and  delFlag = "0"
+  </select>
+  <!--批量删除-->
+  <update id="deleteApplyInfo" parameterType="java.util.List">
+    update apply_base_info set delFlag  = "1"
+    where applyId in (
+    <foreach collection="list" item="item" index="index" separator=",">
+      #{item}
+    </foreach>
+    )
+  </update>
+  <!--插入-->
+  <insert id="insert" parameterType="com.teachManage.model.ApplyBaseInfo" >
+    INSERT INTO apply_base_info (
+	id,
+	applyId,
+	applyType,
+	createBy,
+	createTime,
+	auditBy,
+	remark,
+	advise,
+	status,
+	addUser,
+	addTime,
+	modifyUser,
+	modifyTime,
+	delFlag
+)
+    values (
+    #{applyInfo.id,jdbcType=INTEGER}, 
+    #{applyInfo.applyId,jdbcType=VARCHAR},
+    #{applyInfo.applyType,jdbcType=VARCHAR},  
+    #{applyInfo.createBy,jdbcType=VARCHAR},
+    #{applyInfo.createTime,jdbcType=TIMESTAMP}, 
+    #{applyInfo.auditBy,jdbcType=VARCHAR}, 
+    #{applyInfo.remark,jdbcType=VARCHAR},
+    #{applyInfo.advise,jdbcType=VARCHAR}, 
+    #{applyInfo.status,jdbcType=VARCHAR}, 
+    #{applyInfo.addUser,jdbcType=VARCHAR},
+    NOW(), 
+    #{applyInfo.modifyUser,jdbcType=VARCHAR}, 
+    #{applyInfo.modifyTime,jdbcType=TIMESTAMP},
+    "0"
+  </insert>
+  <!--修改-->
+  <update id="updateApplyInfo" parameterType="com.teachManage.model.ApplyBaseInfo" >
+    update apply_base_info
+    <set >
+      <if test="applyInfo.remark != null" >
+        remark = #{applyInfo.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applyInfo.modifyUser != null" >
+        modifyUser = #{applyInfo.modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="applyInfo.modifyTime != null" >
+        modifyTime = #{applyInfo.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyInfo.delFlag != null" >
+        delFlag = #{applyInfo.delFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="exportMessage" resultType="java.util.Map">
+    SELECT
+    c.applyId AS id,
+    c.addTime,
+    c.applyType,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.createBy
+    ) AS createBy,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.auditBy
+    ) AS auditBy,
+    c.remark,
+    c.advise,
+    CASE c.status
+    WHEN "0" THEN
+    "提交"
+    WHEN "1" THEN
+    "暂存"
+    WHEN "2" THEN
+    "驳回"
+    WHEN "3" THEN
+    "通过"
+    END AS status,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.addUser
+    ) AS addUser,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.modifyUser
+    ) AS modifyUser,
+    c.modifyTime,
+    c.delFlag
+    FROM
+    apply_base_info c
+    WHERE
+    1 = 1
+    AND c.delFlag = "0"
+    <if test="courseInfo.courseNum != null and courseInfo.courseNum != ''">
+      and c.courseNum  like CONCAT('%', #{courseInfo.courseNum}, '%')
+    </if>
+    <if test="courseInfo.courseName != null and courseInfo.courseName != ''">
+      and c.courseName like CONCAT('%', #{courseInfo.courseName}, '%')
+    </if>
+    <if test="courseInfo.credit != null and courseInfo.credit != ''">
+      and c.credit like CONCAT('%', #{courseInfo.credit}, '%')
+    </if>
+    <if test="courseInfo.grade != null and courseInfo.grade != ''">
+      and c.grade = #{courseInfo.grade}
+    </if>
+    <if test="courseInfo.openCourseCollege != null and courseInfo.openCourseCollege != ''">
+      and c.openCourseCollege =#{courseInfo.openCourseCollege}
+    </if>
+    <if test="courseInfo.courseNature != null and courseInfo.courseNature != ''">
+      and c.courseNature = #{courseInfo.courseNature}
+    </if>
+  </select>
+  <select id="exportBatchMessage" parameterType="java.util.List" resultType="java.util.Map">
+    SELECT
+    c.applyId AS id,
+    c.addTime,
+    c.applyType,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.createBy
+    ) AS createBy,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.auditBy
+    ) AS auditBy,
+    c.remark,
+    c.advise,
+    CASE c.status
+    WHEN "0" THEN
+    "提交"
+    WHEN "1" THEN
+    "暂存"
+    WHEN "2" THEN
+    "驳回"
+    WHEN "3" THEN
+    "通过"
+    END AS status,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.addUser
+    ) AS addUser,
+    (
+    SELECT
+    u.userName
+    FROM
+    user_info u
+    WHERE
+    u.jobNumber = c.modifyUser
+    ) AS modifyUser,
+    c.modifyTime,
+    c.delFlag
+    FROM
+    apply_base_info c
+    WHERE
+    1 = 1
+    AND c.delFlag = "0"
+    AND c.applyId IN(
+    <foreach collection="courseNumList" item="item" index="index" separator=",">
+      #{item}
+    </foreach>
+    )
+  </select>
+</mapper>

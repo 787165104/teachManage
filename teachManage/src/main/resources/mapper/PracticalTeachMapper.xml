@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.PracticalTeachMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.PracticalTeach" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="practiceId" property="practiceId" jdbcType="VARCHAR" />
+    <result column="materialId" property="materialId" jdbcType="VARCHAR" />
+    <result column="practiceName" property="practiceName" jdbcType="VARCHAR" />
+    <result column="practiceWeek" property="practiceWeek" jdbcType="VARCHAR" />
+    <result column="practiceGrade" property="practiceGrade" jdbcType="VARCHAR" />
+    <result column="practiceClass" property="practiceClass" jdbcType="VARCHAR" />
+    <result column="jobNumber" property="jobNumber" jdbcType="VARCHAR" />
+    <result column="startDate" property="startDate" jdbcType="VARCHAR" />
+    <result column="endDate" property="endDate" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="addUser" property="addUser" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="modifyUser" property="modifyUser" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, practiceId, materialId, practiceName, practiceWeek, practiceGrade, practiceClass, 
+    jobNumber, startDate, endDate, remark, addUser, addTime, modifyUser, modifyTime, 
+    delFlag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from practical_teach
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from practical_teach
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.teachManage.model.PracticalTeach" >
+    insert into practical_teach (id, practiceId, materialId, 
+      practiceName, practiceWeek, practiceGrade, 
+      practiceClass, jobNumber, startDate, 
+      endDate, remark, addUser, 
+      addTime, modifyUser, modifyTime, 
+      delFlag)
+    values (#{id,jdbcType=INTEGER}, #{practiceid,jdbcType=VARCHAR}, #{materialid,jdbcType=VARCHAR}, 
+      #{practicename,jdbcType=VARCHAR}, #{practiceweek,jdbcType=VARCHAR}, #{practicegrade,jdbcType=VARCHAR}, 
+      #{practiceclass,jdbcType=VARCHAR}, #{jobnumber,jdbcType=VARCHAR}, #{startdate,jdbcType=VARCHAR}, 
+      #{enddate,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{adduser,jdbcType=VARCHAR}, 
+      #{addtime,jdbcType=TIMESTAMP}, #{modifyuser,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, 
+      #{delflag,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.teachManage.model.PracticalTeach" >
+    insert into practical_teach
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="practiceid != null" >
+        practiceId,
+      </if>
+      <if test="materialid != null" >
+        materialId,
+      </if>
+      <if test="practicename != null" >
+        practiceName,
+      </if>
+      <if test="practiceweek != null" >
+        practiceWeek,
+      </if>
+      <if test="practicegrade != null" >
+        practiceGrade,
+      </if>
+      <if test="practiceclass != null" >
+        practiceClass,
+      </if>
+      <if test="jobnumber != null" >
+        jobNumber,
+      </if>
+      <if test="startdate != null" >
+        startDate,
+      </if>
+      <if test="enddate != null" >
+        endDate,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="adduser != null" >
+        addUser,
+      </if>
+      <if test="addtime != null" >
+        addTime,
+      </if>
+      <if test="modifyuser != null" >
+        modifyUser,
+      </if>
+      <if test="modifytime != null" >
+        modifyTime,
+      </if>
+      <if test="delflag != null" >
+        delFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="practiceid != null" >
+        #{practiceid,jdbcType=VARCHAR},
+      </if>
+      <if test="materialid != null" >
+        #{materialid,jdbcType=VARCHAR},
+      </if>
+      <if test="practicename != null" >
+        #{practicename,jdbcType=VARCHAR},
+      </if>
+      <if test="practiceweek != null" >
+        #{practiceweek,jdbcType=VARCHAR},
+      </if>
+      <if test="practicegrade != null" >
+        #{practicegrade,jdbcType=VARCHAR},
+      </if>
+      <if test="practiceclass != null" >
+        #{practiceclass,jdbcType=VARCHAR},
+      </if>
+      <if test="jobnumber != null" >
+        #{jobnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="startdate != null" >
+        #{startdate,jdbcType=VARCHAR},
+      </if>
+      <if test="enddate != null" >
+        #{enddate,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="adduser != null" >
+        #{adduser,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyuser != null" >
+        #{modifyuser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifytime != null" >
+        #{modifytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delflag != null" >
+        #{delflag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teachManage.model.PracticalTeach" >
+    update practical_teach
+    <set >
+      <if test="practiceid != null" >
+        practiceId = #{practiceid,jdbcType=VARCHAR},
+      </if>
+      <if test="materialid != null" >
+        materialId = #{materialid,jdbcType=VARCHAR},
+      </if>
+      <if test="practicename != null" >
+        practiceName = #{practicename,jdbcType=VARCHAR},
+      </if>
+      <if test="practiceweek != null" >
+        practiceWeek = #{practiceweek,jdbcType=VARCHAR},
+      </if>
+      <if test="practicegrade != null" >
+        practiceGrade = #{practicegrade,jdbcType=VARCHAR},
+      </if>
+      <if test="practiceclass != null" >
+        practiceClass = #{practiceclass,jdbcType=VARCHAR},
+      </if>
+      <if test="jobnumber != null" >
+        jobNumber = #{jobnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="startdate != null" >
+        startDate = #{startdate,jdbcType=VARCHAR},
+      </if>
+      <if test="enddate != null" >
+        endDate = #{enddate,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="adduser != null" >
+        addUser = #{adduser,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        addTime = #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyuser != null" >
+        modifyUser = #{modifyuser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifytime != null" >
+        modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delflag != null" >
+        delFlag = #{delflag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teachManage.model.PracticalTeach" >
+    update practical_teach
+    set practiceId = #{practiceid,jdbcType=VARCHAR},
+      materialId = #{materialid,jdbcType=VARCHAR},
+      practiceName = #{practicename,jdbcType=VARCHAR},
+      practiceWeek = #{practiceweek,jdbcType=VARCHAR},
+      practiceGrade = #{practicegrade,jdbcType=VARCHAR},
+      practiceClass = #{practiceclass,jdbcType=VARCHAR},
+      jobNumber = #{jobnumber,jdbcType=VARCHAR},
+      startDate = #{startdate,jdbcType=VARCHAR},
+      endDate = #{enddate,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      addUser = #{adduser,jdbcType=VARCHAR},
+      addTime = #{addtime,jdbcType=TIMESTAMP},
+      modifyUser = #{modifyuser,jdbcType=VARCHAR},
+      modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+      delFlag = #{delflag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

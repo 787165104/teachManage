@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.CourseInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.CourseInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="teacherPlanNum" property="teacherPlanNum" jdbcType="VARCHAR" />
+    <result column="courseNum" property="courseNum" jdbcType="VARCHAR" />
+    <result column="courseName" property="courseName" jdbcType="VARCHAR" />
+    <result column="credit" property="credit" jdbcType="VARCHAR" />
+    <result column="totalClassHours" property="totalClassHours" jdbcType="VARCHAR" />
+    <result column="lectureHours" property="lectureHours" jdbcType="VARCHAR" />
+    <result column="experimentalHours" property="experimentalHours" jdbcType="VARCHAR" />
+    <result column="coursePracticeHours" property="coursePracticeHours" jdbcType="VARCHAR" />
+    <result column="examinationMode" property="examinationMode" jdbcType="VARCHAR" />
+    <result column="professionalName" property="professionalName" jdbcType="VARCHAR" />
+    <result column="professionalField" property="professionalField" jdbcType="VARCHAR" />
+    <result column="courseNature" property="courseNature" jdbcType="VARCHAR" />
+    <result column="courseType" property="courseType" jdbcType="VARCHAR" />
+    <result column="openCourseCollege" property="openCourseCollege" jdbcType="VARCHAR" />
+    <result column="addUser" property="addUser" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="modifyUser" property="modifyUser" jdbcType="VARCHAR" />
+    <result column="grade" property="grade" jdbcType="VARCHAR" />
+    <result column="academy" property="academy" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, teacherPlanNum, courseNum, academy,courseName, credit, totalClassHours, lectureHours, 
+    experimentalHours, coursePracticeHours, examinationMode, professionalName, professionalField, 
+    courseNature, courseType, openCourseCollege, grade,addUser, addTime, modifyUser, modifyTime, 
+    delFlag
+  </sql>
+ <!-- 查询记录总数 -->
+   <select id="selectCoursePagingCount" resultType="Integer">
+  		select COUNT(c.courseNum) 
+  		from course_info c
+  		where 1=1 and delFlag = "0"
+  		<if test="courseInfo.courseNum != null and courseInfo.courseNum != ''">
+	    	and c.courseNum  like CONCAT('%', #{courseInfo.courseNum}, '%')
+	    </if>
+	    <if test="courseInfo.courseName != null and courseInfo.courseName != ''">
+	     	and c.courseName like CONCAT('%', #{courseInfo.courseName}, '%')
+	    </if>
+	    <if test="courseInfo.credit != null and courseInfo.credit != ''">
+	    	and c.credit like CONCAT('%', #{courseInfo.credit}, '%')
+	    </if>
+	    <if test="courseInfo.grade != null and courseInfo.grade != ''">
+	     	and c.grade = #{courseInfo.grade}
+	    </if>
+	    <if test="courseInfo.openCourseCollege != null and courseInfo.openCourseCollege != ''">
+	    	and c.openCourseCollege =#{courseInfo.openCourseCollege}
+	    </if>
+	    <if test="courseInfo.courseNature != null and courseInfo.courseNature != ''">
+	     	and c.courseNature = #{courseInfo.courseNature}
+	    </if>
+  		ORDER BY addTime DESC 
+  </select>
+  <!-- 查询课程信息记录 -->
+  <select id="selectCoursePaging" resultMap="BaseResultMap">
+  	select c.courseNum as id, c.addTime,c.teacherPlanNum, c.courseNum, c.courseName, c.credit, c.totalClassHours, c.lectureHours, 
+    c.experimentalHours, c.coursePracticeHours, c.examinationMode, c.professionalName, c.professionalField, 
+    c.courseNature,c.grade, c.courseType, (select a.academy from academy a where a.academyId = c.openCourseCollege) as openCourseCollege, c.addUser,  c.modifyUser, c.modifyTime, 
+    c.delFlag
+    from course_info c
+    where 1=1 and 
+    delFlag = "0"
+    <if test="courseInfo.courseNum != null and courseInfo.courseNum != ''">
+    	and c.courseNum  like CONCAT('%', #{courseInfo.courseNum}, '%')
+    </if>
+    <if test="courseInfo.courseName != null and courseInfo.courseName != ''">
+     	and c.courseName like CONCAT('%', #{courseInfo.courseName}, '%')
+    </if>
+    <if test="courseInfo.credit != null and courseInfo.credit != ''">
+    	and c.credit like CONCAT('%', #{courseInfo.credit}, '%')
+    </if>
+    <if test="courseInfo.grade != null and courseInfo.grade != ''">
+     	and c.grade = #{courseInfo.grade}
+    </if>
+    <if test="courseInfo.openCourseCollege != null and courseInfo.openCourseCollege != ''">
+    	and c.openCourseCollege =#{courseInfo.openCourseCollege}
+    </if>
+    <if test="courseInfo.courseNature != null and courseInfo.courseNature != ''">
+     	and c.courseNature = #{courseInfo.courseNature}
+    </if>
+    ORDER BY addTime DESC limit #{beginIndex},#{rows}
+  </select>
+  <!-- 插入新的课程信息 -->
+  <insert id="insert" parameterType="com.teachManage.model.CourseInfo">
+  	insert into course_info (teacherPlanNum, courseNum, courseName, credit, totalClassHours, lectureHours, 
+    experimentalHours, coursePracticeHours, examinationMode, professionalName, professionalField, 
+    courseNature, courseType, openCourseCollege, addUser, addTime, grade, 
+    delFlag
+  	) values (#{teacherPlanNum}, #{courseNum}, #{courseName},
+  	#{credit},#{totalClassHours},#{lectureHours},#{experimentalHours},#{coursePracticeHours},#{examinationMode},
+  	#{professionalName},#{professionalField},#{courseNature},#{courseType},#{openCourseCollege},#{addUser},NOW(),#{grade},"0")
+  </insert>
+  <!-- 根据课程名查询课程信息 -->
+  <select id="findCourseByCourseName" parameterType="java.lang.String" resultMap="BaseResultMap">
+  
+  select 
+  <include refid="Base_Column_List"/>
+  from course_info
+  where 1=1 and 
+  delFlag = "0"
+  and courseName=#{courseName}
+  </select>
+  <!-- 查询教学计划号 -->
+  <select id="selectTeacherPlanNum" resultType="Integer">
+  		select count(teacherPlanNum) from course_info where teacherPlanNum = #{teacherPlanNum} 
+  </select>
+  <!-- 查询教学计划号相同情况下，课程号的最大值 -->
+  <select id="getMaxCourseNum" resultType="java.lang.String">
+  	select MAX(courseNum) from course_info where teacherPlanNum = #{teacherPlanNum}
+  </select>
+  <!-- 根据学院id查询课程信息 -->
+   <select id="findCourseByAcademyId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  select 
+  <include refid="Base_Column_List"/>
+  from course_info
+  where 1=1 and 
+  delFlag = "0"
+  and openCourseCollege=#{academyId}
+  </select>
+  <select id="selectCourseList" resultMap="BaseResultMap">
+  select 
+  <include refid="Base_Column_List"/>
+  from course_info
+  where 1=1 and 
+  delFlag = "0"
+  </select>
+  <!-- 查询课程详细信息 -->
+  <select id="getCourseDetail" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select c.id, c.teacherPlanNum, c.courseNum, c.courseName, c.credit, c.totalClassHours, c.lectureHours, 
+    c.experimentalHours, c.coursePracticeHours, c.examinationMode, c.professionalName, c.professionalField, 
+    c.courseNature,c.grade, c.courseType, c.openCourseCollege,(select a.academy from academy a WHERE a.academyId = c.openCourseCollege) as academy, 
+(select u.userName from user_info u WHERE u.jobNumber = c.addUser) as addUser, c.addTime, 
+(select u.userName from user_info u WHERE u.jobNumber = c.modifyUser) as modifyUser, c.modifyTime, 
+    c.delFlag from course_info c
+    where c.delFlag = "0" and c.courseNum = #{courseNum}
+  </select>
+  <update id="deleteCourseInfo" parameterType="java.util.List">
+  		update course_info set delFlag  = "1" 
+  		where courseNum in (
+  		<foreach collection="list" item="item" index="index" separator=",">
+  			#{item}
+  		</foreach>
+  		)
+  </update>
+  <select id="exportMessage" resultType="java.util.Map">
+  select c.id, c.teacherPlanNum, c.courseNum, c.courseName, c.credit, c.totalClassHours, c.lectureHours, 
+    c.experimentalHours, c.coursePracticeHours, case c.examinationMode when "0" then "考试" when "1" then "考查" end as examinationMode, c.professionalName, c.professionalField, 
+    case c.courseNature when "0" then "必修" when "1" then "选修" end as courseNature,c.grade, c.courseType, (select a.academy from academy a WHERE a.academyId = c.openCourseCollege) as openCourseCollege, 
+(select u.userName from user_info u WHERE u.jobNumber = c.addUser) as addUser, c.addTime, 
+(select u.userName from user_info u WHERE u.jobNumber = c.modifyUser) as modifyUser, c.modifyTime, 
+    c.delFlag from course_info c
+    where 1=1 and delFlag = "0" 
+    <if test="courseInfo.courseNum != null and courseInfo.courseNum != ''">
+	    	and c.courseNum  like CONCAT('%', #{courseInfo.courseNum}, '%')
+    </if>
+    <if test="courseInfo.courseName != null and courseInfo.courseName != ''">
+     	and c.courseName like CONCAT('%', #{courseInfo.courseName}, '%')
+    </if>
+    <if test="courseInfo.credit != null and courseInfo.credit != ''">
+    	and c.credit like CONCAT('%', #{courseInfo.credit}, '%')
+    </if>
+    <if test="courseInfo.grade != null and courseInfo.grade != ''">
+     	and c.grade = #{courseInfo.grade}
+    </if>
+    <if test="courseInfo.openCourseCollege != null and courseInfo.openCourseCollege != ''">
+    	and c.openCourseCollege =#{courseInfo.openCourseCollege}
+    </if>
+    <if test="courseInfo.courseNature != null and courseInfo.courseNature != ''">
+     	and c.courseNature = #{courseInfo.courseNature}
+    </if>
+  </select>
+  <select id="exportBatchMessage" parameterType="java.util.List" resultType="java.util.Map">
+  		select c.id, c.teacherPlanNum, c.courseNum, c.courseName, c.credit, c.totalClassHours, c.lectureHours, 
+    c.experimentalHours, c.coursePracticeHours, case c.examinationMode when "0" then "考试" when "1" then "考查" end as examinationMode, c.professionalName, c.professionalField, 
+    case c.courseNature when "0" then "必修" when "1" then "选修" end as courseNature,c.grade, c.courseType, (select a.academy from academy a WHERE a.academyId = c.openCourseCollege) as openCourseCollege, 
+(select u.userName from user_info u WHERE u.jobNumber = c.addUser) as addUser, c.addTime, 
+(select u.userName from user_info u WHERE u.jobNumber = c.modifyUser) as modifyUser, c.modifyTime, 
+    c.delFlag from course_info c
+    where 1=1 and delFlag = "0" 
+    and c.courseNum in(
+    <foreach collection="courseNumList" item="item" index="index" separator=",">
+    	#{item}
+    </foreach>
+    )
+  </select>
+
+  <update id="updateCourseInfo" parameterType="com.teachManage.model.CourseInfo">
+  		update course_info set courseName=#{courseName},
+  		 credit=#{credit}, totalClassHours=#{totalClassHours}, lectureHours=#{lectureHours}, 
+    experimentalHours=#{experimentalHours}, coursePracticeHours=#{coursePracticeHours}, examinationMode=#{examinationMode}, 
+    professionalName=#{professionalName}, professionalField=#{professionalField}, 
+    courseNature=#{courseNature}, courseType=#{courseType}, openCourseCollege=#{openCourseCollege},
+    grade=#{grade},modifyUser=#{modifyUser},modifyTime=NOW() where 1=1 and courseNum = #{courseNum}
+  	
+  
+  </update>
+
+  <select id="findCourseByAcademy" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select 
+     <include refid="Base_Column_List"/>
+     from course_info
+     where 1=1 and delFlag = "0" 
+     and academy=#{openCourseCollege}
+  </select>
+ <select id="selectCourseListByAcademy" resultMap="BaseResultMap">
+ 	select <include refid="Base_Column_List"/>
+     from course_info
+     where 1=1 and delFlag = "0" 
+     <if test="academyId != null and academyId != ''">
+    	and openCourseCollege =#{academyId}
+    </if>
+     <if test="useGrade != null and useGrade != ''">
+    	and grade =#{useGrade}
+    </if>
+     ORDER BY addTime DESC
+ </select>
+</mapper>

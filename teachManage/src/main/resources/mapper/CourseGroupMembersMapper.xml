@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.CourseGroupMembersMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.CourseGroupMembers" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="groupId" property="groupId" jdbcType="VARCHAR" />
+    <result column="groupName" property="groupName" jdbcType="VARCHAR" />
+    <result column="groupHeaderId" property="groupHeaderId" jdbcType="VARCHAR" />
+    <result column="memberId" property="memberId" jdbcType="VARCHAR" />
+    <result column="groupProject" property="groupProject" jdbcType="VARCHAR" />
+    <result column="projectResult" property="projectResult" jdbcType="VARCHAR" />
+    <result column="addUser" property="addUser" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="modifyUser" property="modifyUser" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, groupId,groupName, groupHeaderId, memberId, groupProject, projectResult, addUser, 
+    addTime, modifyUser, modifyTime, delFlag
+  </sql>
+  <insert id="addCourseGroupMembers" parameterType="com.teachManage.model.CourseGroupMembers">
+		insert into group_member (groupId,groupName, groupHeaderId, memberId, groupProject, projectResult, addUser, 
+	    addTime, delFlag) values ( #{groupId,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{groupHeaderId,jdbcType=VARCHAR},
+	     #{memberId,jdbcType=VARCHAR}, #{groupProject,jdbcType=VARCHAR}, #{projectResult,jdbcType=VARCHAR},
+	      #{addUser,jdbcType=VARCHAR},NOW(),#{delFlag,jdbcType=VARCHAR})
+  </insert>
+  <update id="deleteCourseGroupMem" parameterType="java.lang.String">
+  		update group_member set delFlag = "1" where groupId = #{groupId}
+  </update>
+  
+  <select id="getCourseGroupMemberDetail" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT g.memberId,(select u.userName from user_info u where u.jobNumber = g.memberId) as groupHeaderId 
+  		from group_member g where 1=1 and delFlag = "0"
+		and g.groupId = #{groupId}
+  </select>
+  <select id="getMyCourseGroup" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select g.id, g.groupId,g.groupName, g.groupHeaderId, g.memberId, g.groupProject, g.projectResult, g.addUser, 
+    g.addTime, g.modifyUser, g.modifyTime, g.delFlag from group_member g where g.memberId = #{loginId}
+  </select>
+  
+  <update id="addProjectResult" parameterType="com.teachManage.model.CourseGroupMembers">
+  		update group_member set projectResult = #{projectResult} where 
+  		groupId = #{groupId} and memberId = #{memberId}
+  </update>
+   <select id="findManageGroup" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select groupId,groupName from group_member where delFlag = "0" and groupHeaderId = #{jobNumber}
+  </select>
+  <select id="getEditCourseGroupMemberDetail" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT g.memberId,g.groupHeaderId 
+  		from group_member g where 1=1 and delFlag = "0"
+		and g.groupId = #{groupId}
+  </select>
+  <update id="deleteGroupMembers">
+  	update group_member set delFlag = "1" where groupId = #{groupId}
+  </update>
+</mapper>

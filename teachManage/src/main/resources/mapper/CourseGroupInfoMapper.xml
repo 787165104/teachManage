@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.CourseGroupInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.CourseGroupInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="groupId" property="groupId" jdbcType="VARCHAR" />
+    <result column="groupName" property="groupName" jdbcType="VARCHAR" />
+    <result column="groupHeaderId" property="groupHeaderId" jdbcType="VARCHAR" />
+    <result column="courseNum" property="courseNum" jdbcType="VARCHAR" />
+    <result column="courseName" property="courseName" jdbcType="VARCHAR" />
+    <result column="groupMemberId" property="groupMemberId" jdbcType="VARCHAR" />
+    <result column="groupProject" property="groupProject" jdbcType="VARCHAR" />
+    <result column="projectResult" property="projectResult" jdbcType="VARCHAR" />
+    <result column="addUser" property="addUser" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="modifyUser" property="modifyUser" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, groupId,groupName, groupHeaderId,courseNum,courseName, groupMemberId, groupProject, projectResult, addUser, 
+    addTime, modifyUser, modifyTime, delFlag
+  </sql>
+  <select id="selectCourseGroupPagingCount" resultType="Integer">
+	select count(c.groupId) from course_group_info c where 1=1 and delFlag = "0"
+	<if test="courseGroupInfo.groupId != null and courseGroupInfo.groupId != ''">
+	    and c.groupId =#{courseGroupInfo.groupId}
+    </if>
+    <if test="courseGroupInfo.groupHeaderId != null and courseGroupInfo.groupHeaderId != ''">
+     	and c.groupHeaderId = #{courseGroupInfo.groupHeaderId}
+    </if>
+ 		ORDER BY c.addTime DESC 
+  </select>
+  <select id="selectCourseGroupPaging" resultMap="BaseResultMap">
+  select c.groupId as id, c.groupId,c.groupName, c.courseNum,c.courseName,(select u.userName from user_info u where u.jobNumber = c.groupHeaderId) as groupHeaderId,
+   c.groupMemberId, c.groupProject, c.projectResult,
+	(select u.userName from user_info u where u.jobNumber = c.addUser) as addUser, 
+    c.addTime, c.modifyUser, c.modifyTime, c.delFlag from course_group_info c WHERE 1=1 and c.delFlag="0"  
+    <if test="courseGroupInfo.groupId != null and courseGroupInfo.groupId != ''">
+	    and c.groupId =#{courseGroupInfo.groupId}
+    </if>
+    <if test="courseGroupInfo.groupHeaderId != null and courseGroupInfo.groupHeaderId != ''">
+     	and c.groupHeaderId = #{courseGroupInfo.groupHeaderId}
+    </if>
+    ORDER BY c.addTime DESC 
+  </select>
+  <insert id="addCourseGroup" parameterType="com.teachManage.model.CourseGroupInfo" >
+    insert into course_group_info (groupId, groupName, groupHeaderId,groupMemberId,courseNum,courseName,
+     groupProject,projectResult, addUser,addTime,delFlag) 
+     values 
+     (#{groupId,jdbcType=VARCHAR},#{groupName,jdbcType=VARCHAR},
+     #{groupHeaderId,jdbcType=VARCHAR},#{groupMemberId,jdbcType=VARCHAR},#{courseNum,jdbcType=VARCHAR},
+    #{courseName,jdbcType=VARCHAR}, #{groupProject,jdbcType=VARCHAR}, #{projectResult,jdbcType=VARCHAR},
+    #{addUser,jdbcType=VARCHAR}, NOW(),#{delFlag,jdbcType=VARCHAR})
+    
+    
+  </insert>
+  <select id="getMaxGroupId" resultType="java.lang.String">
+		SELECT MAX(cast(groupId as SIGNED))
+		FROM
+			course_group_info
+	</select>
+	<update id="deleteCourseGroup" parameterType="java.lang.String">
+		update course_group_info set delFlag = "1" where groupId = #{groupId}
+	</update>
+	
+	<select id="getCourseGroupDetail"  parameterType="java.lang.String" resultMap="BaseResultMap">
+		select c.courseNum,c.courseName,c.groupId,c.groupName,
+		(select u.userName from user_info u WHERE u.jobNumber=c.groupHeaderId )as groupHeaderId,
+		c.groupProject,c.projectResult,c.id from course_group_info c where 1=1 and delFlag = "0"
+		and c.groupId = #{groupId}
+	</select>
+	
+	<update id="addHeaderProjectResult" parameterType="com.teachManage.model.CourseGroupInfo">
+  		update course_group_info set projectResult = #{projectResult} where 
+  		groupId = #{groupId}
+  </update>
+  
+  <select id="getEditCourseGroupDetail"  parameterType="java.lang.String" resultMap="BaseResultMap">
+		select c.courseNum,c.courseName,c.groupId,c.groupName,
+		c.groupHeaderId,
+		c.groupProject,c.projectResult,c.id from course_group_info c where 1=1 and delFlag = "0"
+		and c.groupId = #{groupId}
+	</select>
+	<update id="updateCourseGroup" parameterType="com.teachManage.model.CourseGroupInfo">
+  		update course_group_info set groupName=#{groupName}, groupHeaderId=#{groupHeaderId},courseNum=#{courseNum},
+  		courseName=#{courseName}, groupMemberId=#{groupMemberId}, groupProject=#{groupProject}, 
+  		projectResult=#{projectResult},modifyUser=#{}, modifyTime=NOW(), delFlag=#{delFlag} where delFlag = "0"
+  		and groupId = #{groupId}
+  </update>
+</mapper>

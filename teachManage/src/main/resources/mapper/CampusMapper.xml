@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.CampusMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.Campus" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="campusArea" property="campusarea" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, campusArea
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from campus
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from campus
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.teachManage.model.Campus" >
+    insert into campus (id, campusArea)
+    values (#{id,jdbcType=INTEGER}, #{campusarea,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.teachManage.model.Campus" >
+    insert into campus
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="campusarea != null" >
+        campusArea,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="campusarea != null" >
+        #{campusarea,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teachManage.model.Campus" >
+    update campus
+    <set >
+      <if test="campusarea != null" >
+        campusArea = #{campusarea,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teachManage.model.Campus" >
+    update campus
+    set campusArea = #{campusarea,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+  select 
+  <include refid="Base_Column_List"/>
+  from campus
+  </select>
+  
+  
+</mapper>

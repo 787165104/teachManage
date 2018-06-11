@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.TeachTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.TeachTask" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="taskId" property="taskId" jdbcType="VARCHAR" />
+    <result column="courseNum" property="courseNum" jdbcType="VARCHAR" />
+    <result column="materialId" property="materialId" jdbcType="VARCHAR" />
+    <result column="courseNature" property="courseNature" jdbcType="VARCHAR" />
+    <result column="courseName" property="courseName" jdbcType="VARCHAR" />
+    <result column="openCourseCollege" property="openCourseCollege" jdbcType="VARCHAR" />
+    <result column="totalClassHours" property="totalClassHours" jdbcType="VARCHAR" />
+    <result column="lectureHours" property="lectureHours" jdbcType="VARCHAR" />
+    <result column="experimentalHours" property="experimentalHours" jdbcType="VARCHAR" />
+    <result column="startWeak" property="startWeak" jdbcType="VARCHAR" />
+    <result column="endWeak" property="endWeak" jdbcType="VARCHAR" />
+    <result column="coursePracticeHours" property="coursePracticeHours" jdbcType="VARCHAR" />
+    <result column="campusArea" property="campusArea" jdbcType="VARCHAR" />
+    <result column="teachClass" property="teachClass" jdbcType="VARCHAR" />
+    <result column="jobNumber" property="jobNumber" jdbcType="VARCHAR" />
+    <result column="teacherAge" property="teacherAge" jdbcType="VARCHAR" />
+    <result column="positionalTitle" property="positionalTitle" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="grade" property="grade" jdbcType="VARCHAR" />
+    <result column="addUser" property="addUser" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="modifyUser" property="modifyUser" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, taskId, courseNum, materialId, courseName,openCourseCollege,courseNature, totalClassHours, lectureHours, experimentalHours, 
+    startWeak,endWeak,coursePracticeHours, campusArea, teachClass, jobNumber, teacherAge, positionalTitle,
+    remark, grade, addUser, addTime, modifyUser, modifyTime, delFlag
+  </sql>
+  
+  <select id="selectAllTeachTask" resultMap="BaseResultMap">
+  select 
+   a.id, a.taskId, a.courseNum, a.materialId, a.courseName,a.openCourseCollege,a.courseNature, a.totalClassHours, a.lectureHours, a.experimentalHours, a.startWeak,a.endWeak,
+    a.coursePracticeHours, a.campusArea, a.teachClass, (select userName from user_info u where u.jobNumber = a.jobNumber) as jobNumber, a.teacherAge, a.positionalTitle, 
+    a.remark, a.grade, a.addUser, a.addTime, a.modifyUser, a.modifyTime, a.delFlag
+  from teach_task a
+  where 1=1 and 
+  a.delFlag = "0"
+  <if test="teachTask.courseNum != null and teachTask.courseNum != ''">
+    	and a.courseNum  like CONCAT('%', #{teachTask.courseNum}, '%')
+    </if>
+    <if test="teachTask.courseName != null and teachTask.courseName != ''">
+     	and a.courseName like CONCAT('%', #{teachTask.courseName}, '%')
+    </if>
+    <if test="teachTask.jobNumber != null and teachTask.jobNumber != ''">
+    	and a.jobNumber like CONCAT('%', #{teachTask.jobNumber}, '%')
+    </if>
+    <if test="teachTask.grade != null and teachTask.grade != ''">
+     	and a.grade = #{teachTask.grade}
+    </if>
+    <if test="teachTask.courseNature != null and teachTask.courseNature != ''">
+    	and a.courseNature =#{teachTask.courseNature}
+    </if>
+      <if test="teachTask.campusArea != null and teachTask.campusArea != ''">
+    	and a.campusArea like CONCAT('%', #{teachTask.campusArea}, '%')
+    </if>
+    limit #{beginIndex},#{rows}
+  </select>
+
+    <select id="selectTeachTaskByjobNumber" resultMap="BaseResultMap">
+        select
+        a.id, a.taskId, a.courseNum, a.materialId, a.courseName,a.openCourseCollege,a.courseNature, a.totalClassHours, a.lectureHours, a.experimentalHours, a.startWeak,a.endWeak,
+        a.coursePracticeHours, a.campusArea, a.teachClass, (select userName from user_info u where u.jobNumber = a.jobNumber) as jobNumber, a.teacherAge, a.positionalTitle,
+        a.remark, a.grade, a.addUser, a.addTime, a.modifyUser, a.modifyTime, a.delFlag
+        from teach_task a
+        where a.jobNumber=#{jobNumber} and
+        a.delFlag = "0"
+        <if test="teachTask.courseNum != null and teachTask.courseNum != ''">
+            and a.courseNum  like CONCAT('%', #{teachTask.courseNum}, '%')
+        </if>
+        <if test="teachTask.courseName != null and teachTask.courseName != ''">
+            and a.courseName like CONCAT('%', #{teachTask.courseName}, '%')
+        </if>
+        <if test="teachTask.jobNumber != null and teachTask.jobNumber != ''">
+            and a.jobNumber like CONCAT('%', #{teachTask.jobNumber}, '%')
+        </if>
+        <if test="teachTask.grade != null and teachTask.grade != ''">
+            and a.grade = #{teachTask.grade}
+        </if>
+        <if test="teachTask.courseNature != null and teachTask.courseNature != ''">
+            and a.courseNature =#{teachTask.courseNature}
+        </if>
+        <if test="teachTask.campusArea != null and teachTask.campusArea != ''">
+            and a.campusArea like CONCAT('%', #{teachTask.campusArea}, '%')
+        </if>
+        limit #{beginIndex},#{rows}
+    </select>
+  <insert id="addTeachTask" parameterType="com.teachManage.model.TeachTask">
+  insert  into teach_task(taskId,
+   courseNum, materialId, courseName,openCourseCollege,courseNature, 
+   totalClassHours, lectureHours, experimentalHours,startWeak,endWeak,
+   coursePracticeHours, campusArea, teachClass, 
+   jobNumber, teacherAge, positionalTitle, 
+   remark, grade, addUser, addTime, delFlag)
+  values(#{taskId,jdbcType=VARCHAR}, #{courseNum,jdbcType=VARCHAR}, 
+      #{materialId,jdbcType=VARCHAR}, #{courseName,jdbcType=VARCHAR},#{openCourseCollege,jdbcType=VARCHAR}, #{courseNature,jdbcType=VARCHAR}, 
+      #{totalClassHours,jdbcType=VARCHAR}, #{lectureHours,jdbcType=VARCHAR}, #{experimentalHours,jdbcType=VARCHAR}, 
+       #{startWeak,jdbcType=VARCHAR}, #{endWeak,jdbcType=VARCHAR},#{coursePracticeHours,jdbcType=VARCHAR}, #{campusArea,jdbcType=VARCHAR}, #{teachClass,jdbcType=VARCHAR},
+      #{jobNumber,jdbcType=VARCHAR}, #{teacherAge,jdbcType=VARCHAR}, #{positionalTitle,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR},
+      #{addUser,jdbcType=VARCHAR}, NOW(),
+      #{delFlag,jdbcType=VARCHAR})
+  
+  </insert>
+ <select id="selectTeachTaskCount" resultType="Integer">
+ select count(taskId) from teach_task 
+ where 1=1 and delFlag = "0"
+   <if test="teachTask.courseNum != null and teachTask.courseNum != ''">
+    	and courseNum  like CONCAT('%', #{teachTask.courseNum}, '%')
+    </if>
+    <if test="teachTask.courseName != null and teachTask.courseName != ''">
+     	and courseName like CONCAT('%', #{teachTask.courseName}, '%')
+    </if>
+    <if test="teachTask.jobNumber != null and teachTask.jobNumber != ''">
+    	and jobNumber like CONCAT('%', #{teachTask.jobNumber}, '%')
+    </if>
+    <if test="teachTask.grade != null and teachTask.grade != ''">
+     	and grade = #{teachTask.grade}
+    </if>
+    <if test="teachTask.courseNature != null and teachTask.courseNature != ''">
+    	and courseNature =#{teachTask.courseNature}
+    </if>
+      <if test="teachTask.campusArea != null and teachTask.campusArea != ''">
+    	and campusArea =#{teachTask.campusArea}
+    </if>
+ </select> 
+ 
+ <!-- c -->
+  <update id="deleteTeachTask" parameterType="java.util.List" >
+  	update teach_task set delFlag = '1'
+  	where Id in (
+  	<foreach collection="list" item="item" index="index" separator="," > 
+  		#{item}
+  	</foreach>
+  	)
+  </update>
+  
+ <!-- 查看教学任务 -->
+  <select id="checkTeachTask" resultMap="BaseResultMap" parameterType="java.lang.String">
+  select 
+    a.id, a.taskId, a.courseNum, a.materialId, a.courseName,(select academy from academy u where u.academyId = a.openCourseCollege) as openCourseCollege,a.courseNature, a.totalClassHours, a.lectureHours, a.experimentalHours, 
+    a.startWeak,a.endWeak,a.coursePracticeHours, a.campusArea, a.teachClass, (select userName from user_info u where u.jobNumber = a.jobNumber) as jobNumber, a.teacherAge, a.positionalTitle,
+    a.remark, a.grade, a.addUser, a.addTime, a.modifyUser, a.modifyTime, a.delFlag
+  from teach_task a
+  where 1=1 and a.delFlag = "0"
+  and a.id=#{id}
+  </select>
+
+  <!-- 修改教学任务 -->
+  <update id="updateTeachTask" parameterType="com.teachManage.model.TeachTask">
+    update teach_task
+    <set>
+    <if test="teachTask.taskId !=null">
+     taskId=#{teachTask.taskId,jdbcType=VARCHAR},
+    </if>
+    <if test="teachTask.courseNum !=null">
+     courseNum= #{teachTask.courseNum,jdbcType=VARCHAR},
+    </if>
+    <if test="teachTask.courseName !=null">
+     courseName=#{teachTask.courseName,jdbcType=VARCHAR},
+    </if>
+    <if test="teachTask.openCourseCollege !=null">
+    openCourseCollege=#{teachTask.openCourseCollege,jdbcType=VARCHAR},
+    </if>
+    <if test="teachTask.courseNature !=null">
+     courseNature=#{teachTask.courseNature,jdbcType=VARCHAR},
+    
+    </if>
+    <if test="teachTask.totalClassHours !=null">
+    totalClassHours=  #{teachTask.totalClassHours,jdbcType=VARCHAR},
+    </if>
+    <if test="teachTask.lectureHours !=null">
+    lectureHours= #{teachTask.lectureHours,jdbcType=VARCHAR},
+    </if>
+    
+     <if test="teachTask.experimentalHours !=null">
+     experimentalHours=#{teachTask.experimentalHours,jdbcType=VARCHAR},
+
+     </if>
+    <if test="teachTask.startWeak !=null">
+        startWeak=#{teachTask.startWeak,jdbcType=VARCHAR},
+
+    </if>
+    <if test="teachTask.endWeak !=null">
+        endWeak=#{teachTask.endWeak,jdbcType=VARCHAR},
+
+    </if>
+    <if test="teachTask.campusArea !=null">
+    campusArea=#{teachTask.campusArea,jdbcType=VARCHAR},
+    </if>
+    <if test="teachTask.teachClass !=null">
+     teachClass=#{teachTask.teachClass,jdbcType=VARCHAR},
+     
+    </if>
+    <if test="teachTask.jobNumber !=null">
+    jobNumber= #{teachTask.jobNumber,jdbcType=VARCHAR},
+    </if>
+    <if test="teachTask.teacherAge !=null">
+     teacherAge=#{teachTask.teacherAge,jdbcType=VARCHAR},
+    </if>
+    <if test="teachTask.positionalTitle !=null">
+   positionalTitle= #{teachTask.positionalTitle,jdbcType=VARCHAR},
+      
+    </if>
+    <if test="teachTask.remark !=null">
+   remark= #{teachTask.remark,jdbcType=VARCHAR},
+    </if>
+    
+    <if test="teachTask.grade !=null">
+    grade =#{teachTask.grade,jdbcType=VARCHAR},
+      
+    </if>
+    <if test="teachTask.modifyUser !=null">
+    modifyUser= #{teachTask.modifyUser,jdbcType=VARCHAR},
+    </if>
+     modifyTime=NOW()
+
+    </set> 
+     where 
+    id=#{teachTask.id,jdbcType=INTEGER}
+  </update>
+<select id="exportTeachTask"  resultType="java.util.Map">
+select 
+
+    a.id, a.taskId, a.courseNum, a.materialId, a.courseName,a.openCourseCollege,CASE courseNature WHEN 0 THEN '选修'  when 1 THEN '必修' ELSE '其他' end  courseNature, a.totalClassHours, a.lectureHours, a.experimentalHours, 
+    a.startWeak,a.endWeak,a.coursePracticeHours, a.campusArea, a.teachClass, (select userName from user_info u where u.jobNumber = a.jobNumber) as jobNumber, a.teacherAge, a.positionalTitle,
+    a.remark, a.grade, a.addUser, a.addTime, a.modifyUser, a.modifyTime, a.delFlag
+  from teach_task a
+ where 1=1 and delFlag="0"
+ and id in(
+ <foreach collection="list" item="item" index="index" separator="," > 
+  			#{item}
+  		</foreach>
+ )
+</select>
+  
+</mapper>

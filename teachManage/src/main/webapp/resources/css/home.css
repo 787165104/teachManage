@@ -1,0 +1,261 @@
+
+
+body { margin:0px;padding:0px;background-color:#8e92d0;font-size:12px;overflow:hidden;background-color:#eeeeee}
+
+#main{ width:100%;height:100%;min-width:980px;min-height:590px;margin:0 auto;position: absolute }
+
+#left { height:100%; background-color:#fff; margin-right: 320px;width:100%}
+
+#mChat { width:300px; height:100%; position: absolute; top: 70px; right: 0px;float:right;display:block;z-index:1900;}
+
+/**** TOP *****/
+
+/*#top{ width:100%;height:45px;background-color:White; margin: 0px;}*/
+
+.top_body
+{
+    float:left;
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0px;
+    left:0px
+}
+
+.top_body_logo
+{
+    float:left;
+    margin-top:10px;
+    margin-left:30px
+}
+
+.top_body_logo img
+{
+   
+}
+
+.top_body_right
+{
+    float:right;
+    border:1px solid red;
+    width:300px;
+    height:49px
+}
+
+.top_body_right ul
+{
+    list-style-type:none;
+}
+
+.top_body_right li
+{
+    float:left;
+    height:50px;
+}
+
+.top_body_right_head
+{
+    float:left;
+    width:48px;
+    height:48px;
+}
+
+.top_body_right_wel
+{
+    float:left;
+    width:80px;
+    height:50px
+}
+
+.top_body_right_wel_welcome
+{
+    height:25px;
+}
+
+.top_body_right_wel_name
+{
+    height:25px;
+}
+.postion_bgColor
+{
+    width:200px;
+    margin-top:0px;
+    margin-left:0px;
+    height:90px;
+   
+}
+.bgColor 
+{
+    list-style-type:none;
+    padding-left: 15px;
+}
+
+.bgColor li
+{
+    float:left;
+    width: 20px;
+    height: 20px;
+    margin: 3px;
+}
+
+.c_ms
+{
+    border-top:1px solid rgb(66, 66, 66);
+    width:180px;
+    height:1px;
+    float:none;
+    margin-left:30px
+}
+
+.themes-background-img span
+{
+    font-size:14px;
+    color:#666;
+    margin-left:15px;
+    font-family: "Microsoft Yahei UI","Microsoft Yahei",Verdana,Simsun,"Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+}
+.themes-Setting
+{
+    height:30px;
+    margin-top:3px;
+}
+.themes-Setting span a
+{
+    font-size:14px;
+    color:#666;
+    margin-left:30px;
+    font-family: "Microsoft Yahei UI","Microsoft Yahei",Verdana,Simsun,"Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+}
+
+.colorpick-btn.selected:after {
+    content: "\f00c";
+    display: inline-block;
+    font-family: FontAwesome;
+    font-size: 11px;
+    color: #FFF;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    line-height: 20px;
+}
+
+.colorpick-btn {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    position: relative;
+    -webkit-transition: all ease 0.1s;
+    -o-transition: all ease 0.1s;
+    transition: all ease 0.1s;
+    text-align: center;
+    line-height: inherit;
+}
+
+.colorpick-btn:before {
+    color: #fff;
+}
+
+/**** 主体 *****/
+
+#centent{ width:100%;height:100%; min-height: 490px; margin:0px; overflow: hidden; }
+
+#centent-container{ font-family:华文细黑 }
+
+
+/**** 右侧 ****/
+
+
+#right-foot{ width:100%;height:10%;background-color:#c19be2;float:left; }
+
+#right-top{ width:100%;height:100%;float:left;float:left;font-family:微软雅黑;font-size:12px;}
+
+#right-top-bg{background-image:url(/content/images/bg-setting.png);filter: alpha(opacity = 40);opacity: 0.4; width:100%;height:100%;position:absolute;top:0px;left:0px;}
+
+#right-top div{ font-family:微软雅黑;font-size:12px; color:#fff;}
+
+#right-centent { width:100%;height:100%;float:left;background-color:#c19be2;}
+
+.personalinfo{ width:320px;height:50px;float:left;margin-top:0px}
+
+.personalhead{ width:60px;height:60px;float:left;margin-left:0px;margin-top:10px;cursor:pointer;}
+
+.personalhead img{  background-position: center;background-repeat: no-repeat;height: 50px;float: right;}
+
+/*background-image:url(../../images/noup.png);*/
+#imgpersonalhead{ width:100px;height:100px;float:left; }
+.personal{float:left;width:250px;height:50px;font-family:华文细黑;font-weight:bold;margin:10px 0px 0px 0px;padding-left:10px;}
+
+.personalname{ width:100%;height:25px;float:left;text-align:left;padding-top:5px;font-size:16px; color:#000b5a;font-family: 微软雅黑;font-weight: bold;}
+
+.personaldepartment{ float:left;font-weight:normal;min-width: 40px;min-height: 100%;}
+
+.personalposition{ float:left;font-weight:normal;margin-right:10px;min-width: 40px;min-height: 100%;}
+
+#right-container{ float: left; width: 100%;height:70px;overflow: hidden;}
+
+/***** 右侧伸缩控制 *****/
+#right-hidden{ position: absolute;top: 40%;left: -14px; width: 14px; height: 95px;filter: alpha(opacity = 50);opacity: 0.5}
+
+#right-hidden a{margin: 0px; padding: 0px; text-decoration: none;}
+
+/**** 页脚 ****/
+
+#foot{ width:100%;height:60px; background-color:#ddd9f7; position: relative;}
+
+#top .top-bg
+{
+   background-image:url(/content/images/bg-setting.png);
+   filter: alpha(opacity = 50);
+   opacity: 0.5;
+   width: 100%;
+   height: 100%;
+   left: 0px;
+   top: 0px;
+   /*
+   background:#fff; 
+   background:rgba(255,255,255,0.75);
+   filter:"alpha(opacity=75)"; 
+   -ms-filter:"alpha(opacity=75)";
+   */
+}
+
+.foot_tb_contanter
+{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 0px 2px 0px;
+    /*background: url(../images/border-bg.png) repeat-x;*/
+}
+
+.tb{width:100%;height:100%;}
+
+#leftBar{width:6%;}
+
+.imageButton{ padding-left:10px; height: 32px;width: 32px;cursor:pointer}
+
+#themeBar
+{
+    text-align: right;
+    padding-right: 15px;
+    vertical-align: middle;
+    /*padding-top: 5px;*/
+}
+
+#ImBtn
+{
+    float:right;
+}
+
+#toolBar
+{
+    padding-left: 15px;
+    vertical-align: middle;
+    /*padding-top: 5px;*/
+}

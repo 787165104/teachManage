@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.UserInfoMapper">
+	<resultMap id="BaseResultMap" type="com.teachManage.model.UserInfo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="loginId" property="loginId" jdbcType="VARCHAR" />
+		<result column="loginPwd" property="loginPwd" jdbcType="VARCHAR" />
+		<result column="userName" property="userName" jdbcType="VARCHAR" />
+		<result column="IDCard" property="IDCard" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="userEmail" property="userEmail" jdbcType="VARCHAR" />
+		<result column="userPhone" property="userPhone" jdbcType="VARCHAR" />
+		<result column="jobNumber" property="jobNumber" jdbcType="VARCHAR" />
+		<result column="positionalTitle" property="positionalTitle" jdbcType="VARCHAR" />
+		<result column="courseGroup" property="courseGroup" jdbcType="VARCHAR" />
+		<result column="teachCourse" property="teachCourse" jdbcType="VARCHAR" />
+		<result column="lastTeachCourse" property="lastTeachCourse" jdbcType="VARCHAR" />
+		<result column="degree" property="degree" jdbcType="VARCHAR" />
+		<result column="academy" property="academy" jdbcType="VARCHAR" />
+		<result column="beginWorkDate" property="beginWorkDate" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="VARCHAR" />
+		<result column="graduteSchool" property="graduteSchool" jdbcType="VARCHAR" />
+		<result column="intoSchoolDate" property="intoSchoolDate" jdbcType="VARCHAR" />
+		<result column="introduction" property="introduction" jdbcType="VARCHAR" />
+		<result column="researchArea" property="researchArea" jdbcType="VARCHAR" />
+		<result column="headImage" property="headImage" jdbcType="VARCHAR" />
+		<result column="addTime" property="addTime" jdbcType="VARCHAR" />
+		<result column="addUser" property="addUser" jdbcType="VARCHAR" />
+		<result column="modifyTime" property="modifyTime" jdbcType="VARCHAR" />
+		<result column="modifyUser" property="modifyUser" jdbcType="VARCHAR" />
+		<result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, loginId, loginPwd, userName, IDCard, userEmail, userPhone, jobNumber,
+		positionalTitle,
+		courseGroup,teachCourse,lastTeachCourse, degree, academy, beginWorkDate, birthday, graduteSchool,
+		intoSchoolDate,
+		introduction, researchArea, headImage, addTime, addUser, modifyTime, modifyUser,
+		delFlag
+	</sql>
+    <!--新增用户头像-->
+	<insert id="insert" parameterType="java.lang.String">
+		update user_info set headImage = #{headimg}
+		where jobNumber = #{jobNumber}
+	</insert>
+
+	<!-- 开始 -->
+	<select id="findUserInfo" resultMap="BaseResultMap"
+		parameterType="com.teachManage.model.UserInfo">
+		select
+		<include refid="Base_Column_List" />
+		from user_info
+		where delFlag = '0' and loginId = #{userInfo.loginId} and loginPwd =
+		#{userInfo.loginPwd}
+
+	</select>
+	<!--查询教师的最大职工号-->
+	<select id="getMaxJobNum" resultType="java.lang.String">
+		SELECT MAX(cast(jobNumber as SIGNED))
+		FROM
+			user_info
+	</select>
+	<!-- 查询所有教师 -->
+	<select id="findAllTeacher" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+
+		from user_info where delFlag = '0'
+	</select>
+    <!--根据jobNumber查询教师信息-->
+	<select id="selectTeacherByJobNum" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_info where delFlag = '0' and jobNumber=#{jobNumber}
+	</select>
+	<!--查询教师教授课程-->
+	<select id="selectTeachCourseByJobNum" resultMap="BaseResultMap">
+		SELECT DISTINCT
+			u.id,
+			u.loginId,
+			u.loginPwd,
+			u.userName,
+			u.IDCard,
+			u.userEmail,
+			u.userPhone,
+			u.jobNumber,
+			u.positionalTitle,
+			u.courseGroup,
+			u.degree,
+			u.academy,
+			u.beginWorkDate,
+			u.birthday,
+			u.graduteSchool,
+			u.intoSchoolDate,
+			u.introduction,
+			u.researchArea,
+			u.headImage,
+			u.addTime,
+			u.addUser,
+			u.modifyTime,
+			u.modifyUser,
+			u.delFlag,
+			t.courseName
+		FROM
+			user_info u
+		LEFT JOIN teach_task t ON u.jobNumber = t.jobNumber
+		WHERE
+			u.jobNumber = #{jobNumber}
+		ORDER BY
+			t.addTime DESC
+	</select>
+	<!-- 分页查询所有教师的信息 -->
+	<select id="selectUserInfoPaging" resultMap="BaseResultMap">
+		select
+		id,
+		jobNumber,
+		userName,
+		positionalTitle,
+		academy,
+		degree,
+		introduction,
+		DATE_FORMAT(
+			intoSchoolDate,
+			'%Y-%m-%d'
+		) as intoSchoolDate
+		from user_info
+		where delFlag = '0'
+		<if test="userInfo.userName != null and userInfo.userName !='' ">
+			and userName like CONCAT('%', #{userInfo.userName}, '%')
+		</if>
+		<if
+			test="userInfo.positionalTitle != null and userInfo.positionalTitle !='' ">
+			and positionalTitle = #{userInfo.positionalTitle}
+		</if>
+		<if test="userInfo.academy != null and userInfo.academy !='' ">
+			and academy = #{userInfo.academy}
+		</if>
+		<if test="userInfo.degree != null and userInfo.degree !='' ">
+			and degree = #{userInfo.degree}
+		</if>
+		<if test="userInfo.intoSchoolDate != null and userInfo.intoSchoolDate !='' ">
+			and  DATE_FORMAT(intoSchoolDate,'%Y-%m-%d')=#{userInfo.intoSchoolDate}
+		</if>
+		order by jobNumber
+		limit #{pageIndex}, #{pageSize}
+	</select>
+	<!-- 查询总条数 -->
+	<select id="selectUserInfoCount" resultType="Integer">
+		select count(loginId)
+		from user_info
+		where delFlag='0'
+		<if test="userInfo.userName != null and userInfo.userName !='' ">
+			and userName like CONCAT('%', #{userInfo.userName}, '%')
+		</if>
+		<if
+			test="userInfo.positionalTitle != null and userInfo.positionalTitle !='' ">
+			and positionalTitle = #{userInfo.positionalTitle}
+		</if>
+		<if test="userInfo.academy != null and userInfo.academy !='' ">
+			and academy = #{userInfo.academy}
+		</if>
+		<if test="userInfo.degree != null and userInfo.degree !='' ">
+			and degree = #{userInfo.degree}
+		</if>
+		<if test="userInfo.intoSchoolDate != null and userInfo.intoSchoolDate !='' ">
+		and  DATE_FORMAT(intoSchoolDate,'%Y-%m-%d')=#{userInfo.intoSchoolDate}
+		</if>
+	</select>
+	<!--添加教师信息-->
+	<insert id="insertUserInfo" parameterType="com.teachManage.model.UserInfo">
+		INSERT INTO user_info (
+				loginId,
+				loginPwd,
+				jobNumber,
+				userName,
+				IDCard,
+				sex,
+				userEmail,
+				userPhone,
+				positionalTitle,
+				courseGroup,
+				teachCourse,
+				lastTeachCourse,
+				degree,
+				academy,
+				beginWorkDate,
+				birthday,
+				graduteSchool,
+				intoSchoolDate,
+				introduction,
+				researchArea,
+				headImage,
+				addTime,
+				addUser,
+				delFlag
+			)
+		VALUES
+			  ( #{userinfo.loginId,jdbcType=VARCHAR},
+			  	#{userinfo.loginPwd,jdbcType=VARCHAR},
+			  	#{userinfo.jobNumber,jdbcType=VARCHAR},
+			    #{userinfo.userName,jdbcType=VARCHAR},
+				#{userinfo.IDCard,jdbcType=VARCHAR},
+				#{userinfo.sex,jdbcType=VARCHAR},
+				#{userinfo.userEmail,jdbcType=VARCHAR},
+				#{userinfo.userPhone,jdbcType=VARCHAR},
+				#{userinfo.positionalTitle,jdbcType=VARCHAR},
+				#{userinfo.courseGroup,jdbcType=VARCHAR},
+				#{userinfo.teachCourse,jdbcType=VARCHAR},
+				#{userinfo.lastTeachCourse,jdbcType=VARCHAR},
+				#{userinfo.degree,jdbcType=VARCHAR},
+				#{userinfo.academy,jdbcType=VARCHAR},
+				#{userinfo.beginWorkDate,jdbcType=VARCHAR},
+				#{userinfo.birthday,jdbcType=VARCHAR},
+				#{userinfo.graduteSchool,jdbcType=VARCHAR},
+				#{userinfo.intoSchoolDate,jdbcType=VARCHAR},
+				#{userinfo.introduction,jdbcType=VARCHAR},
+				#{userinfo.researchArea,jdbcType=VARCHAR},
+				#{userinfo.headImage,jdbcType=VARCHAR},
+				NOW(),
+				#{userinfo.addUser,jdbcType=VARCHAR},
+				"0")
+	</insert>
+	<!--修改教师信息-->
+	<update id="updateUserInfo" parameterType="com.teachManage.model.UserInfo">
+		UPDATE user_info set
+		<if test="userInfo.userName != null and userInfo.userName != ''">
+			userName = #{userInfo.userName},
+		</if>
+		<if test="userInfo.sex != null and userInfo.sex != ''">
+			sex = #{userInfo.sex},
+		</if>
+		<if test="userInfo.userEmail != null and userInfo.userEmail != ''">
+			userEmail = #{userInfo.userEmail},
+		</if>
+		<if test="userInfo.userPhone != null and userInfo.userPhone != ''">
+			userPhone = #{userInfo.userPhone},
+		</if>
+		<if test="userInfo.positionalTitle != null and userInfo.positionalTitle != ''">
+			positionalTitle = #{userInfo.positionalTitle},
+		</if>
+		<if test="userInfo.courseGroup != null and userInfo.courseGroup != ''">
+			courseGroup = #{userInfo.courseGroup},
+		</if>
+		<if test="userInfo.teachCourse != null and userInfo.teachCourse != ''">
+			teachCourse = #{userInfo.teachCourse},
+		</if>
+		<if test="userInfo.lastTeachCourse != null and userInfo.lastTeachCourse != ''">
+			lastTeachCourse = #{userInfo.lastTeachCourse},
+		</if>
+		<if test="userInfo.degree != null and userInfo.degree != ''">
+			degree = #{userInfo.degree},
+		</if>
+		<if test="userInfo.academy != null and userInfo.academy != ''">
+			academy = #{userInfo.academy},
+		</if>
+		<if test="userInfo.beginWorkDate != null and userInfo.beginWorkDate != ''">
+			beginWorkDate = #{userInfo.beginWorkDate},
+		</if>
+		<if test="userInfo.birthday != null and userInfo.birthday != ''">
+			birthday = #{userInfo.birthday},
+		</if>
+		<if test="userInfo.graduteSchool != null and userInfo.graduteSchool != ''">
+			graduteSchool = #{userInfo.graduteSchool},
+		</if>
+		<if test="userInfo.intoSchoolDate != null and userInfo.intoSchoolDate != ''">
+			intoSchoolDate = #{userInfo.intoSchoolDate},
+		</if>
+		<if test="userInfo.introduction != null and userInfo.introduction != ''">
+			introduction = #{userInfo.introduction},
+		</if>
+		<if test="userInfo.researchArea != null and userInfo.researchArea != ''">
+			researchArea = #{userInfo.researchArea},
+		</if>
+		<if test="userInfo.modifyUser != null and userInfo.modifyUser != ''">
+			modifyUser = #{userInfo.modifyUser},
+		</if>
+		modifyTime = NOW()
+		where jobNumber = #{userInfo.jobNumber}
+	</update>
+	<!--删除教师信息-->
+	<update id="deleteUserInfo" parameterType="java.util.List">
+		update user_info set delFlag  = "1"
+		where jobNumber in (
+		<foreach collection="list" item="item" index="index" separator=",">
+			#{item}
+		</foreach>
+		)
+	</update>
+</mapper>

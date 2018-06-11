@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teachManage.mapper.FileCenterMapper" >
+  <resultMap id="BaseResultMap" type="com.teachManage.model.FileCenter" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fileRelateId" property="fileRelateId" jdbcType="VARCHAR" />
+    <result column="fileId" property="fileId" jdbcType="VARCHAR" />
+    <result column="addUserId" property="addUserId" jdbcType="VARCHAR" />
+    <result column="fileName" property="fileName" jdbcType="VARCHAR" />
+    <result column="filePath" property="filePath" jdbcType="VARCHAR" />
+    <result column="fileType" property="fileType" jdbcType="VARCHAR" />
+    <result column="newFileName" property="newFileName" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="modifyUser" property="modifyUser" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fileRelateId,fileId, addUserId, fileName, filePath, fileType, newFileName, addTime, modifyUser, 
+    modifyTime, delFlag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from file_center
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from file_center
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="java.util.List" >
+    insert into file_center (fileRelateId, fileId, addUserId, 
+      fileName, filePath, fileType, 
+      newFileName, addTime,delFlag)
+    values 
+    <foreach collection="list" item="fileList" index="index" separator="," >  
+       (
+       #{fileList.fileRelateId},
+       #{fileList.fileId},
+       #{fileList.addUserId},
+       #{fileList.fileName},
+       #{fileList.filePath},
+       #{fileList.fileType},
+       #{fileList.newFileName},
+        NOW(),
+       #{fileList.delFlag}
+      
+       )
+   </foreach> 
+  </insert>
+  <select id="getFileByCourseRelateId" resultMap="BaseResultMap">
+  		select id, fileRelateId,fileId, addUserId, fileName, filePath, fileType, newFileName, addTime, modifyUser, 
+    modifyTime, delFlag from file_center where delFlag = "0" and fileRelateId = #{fileRelateId}
+  
+  </select>
+  <!-- 批量删除附件 -->
+  <update id="deleteCourseFile" parameterType="java.util.List">
+  	update file_center set delFlag = "1" where fileRelateId 
+  	in(
+  		<foreach collection="list" item="item" index="index" separator=",">
+  			#{item}
+  		</foreach>
+  	)
+  </update>
+  <!-- 单个删除附件 -->
+  <update id="deleteFileByRelateId" parameterType="java.lang.String">
+  	update file_center set delFlag = "1" where fileRelateId = #{courseNum}
+  </update>
+</mapper>
